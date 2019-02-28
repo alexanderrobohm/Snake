@@ -195,11 +195,7 @@ public class Game extends JFrame implements KeyListener{
 					}
 					
 					if (found) {
-						if (apple.getType() != Apple.APPLE_TELE)
-							player.eat(apple);
-						else
-							if (!player.teleport()) player.die();
-
+						player.eat(apple);
 						apples.remove(index);
 						createApples(1, apple.getType());
 					}
@@ -293,7 +289,9 @@ public class Game extends JFrame implements KeyListener{
 			scoreStr = "SCORE: " + scoreStr; // "SCORE: 00013"
 			
 			g2Image.setColor(Color.black);
-			g2Image.drawString(scoreStr, x, (int)((PANEL_HEIGHT - g2Image.getFontMetrics().getStringBounds(scoreStr, g2Image).getHeight()) / 2 + g2Image.getFontMetrics().getAscent()));
+			g2Image.drawString(scoreStr, x, 
+					(int)((PANEL_HEIGHT - g2Image.getFontMetrics().getStringBounds(scoreStr, g2Image).getHeight()) / 2
+					+ g2Image.getFontMetrics().getAscent()));
 			
 		} else if (mode == MODE_GAME_OVER) {
 			String strGameOver = "GAME OVER";

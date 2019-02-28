@@ -36,7 +36,7 @@ public class Player extends Element {
 		
 		tail = new ArrayList<Point>();
 	}
-	
+
 	public void update() {
 		int oldX = this.x;
 		int oldY = this.y;
@@ -149,12 +149,11 @@ public class Player extends Element {
 			this.apple = apple;
 			break;
 		case Apple.APPLE_BAD:
-			if (score >= 5) {
-				score -= 5;
-			} else {
-				die();
-			}
+			if (score >= 5) score -= 5;
+			else die();
 			break;
+		case Apple.APPLE_TELE:
+			teleport();
 		}
 	}
 	
@@ -166,53 +165,47 @@ public class Player extends Element {
 		return tail.size();
 	}
 	
-	@SuppressWarnings("unchecked")
-	public boolean teleport() {
-		int newX = 0, newY = 0;
+	public void teleport() {
+		int oldX = 0, oldY = 0;
 		int xOffset = 0, yOffset = 0;
 		boolean telePossible = false;
 		Random random = new Random();
-		Player playerNew = new Player(game, 0, 0, Game.SNAKE_SIZE, null, bounds);
 		
 		while (!telePossible) {
 			telePossible = true;
 						
-			newX = random.nextInt(bounds.width / Game.SNAKE_SIZE) * Game.SNAKE_SIZE + (Game.SNAKE_SIZE / 2);
-			newY = random.nextInt(bounds.height / Game.SNAKE_SIZE) * Game.SNAKE_SIZE + (Game.SNAKE_SIZE / 2);
+			oldX = x;
+			oldY = y;
+
+			x = random.nextInt(bounds.width / Game.SNAKE_SIZE) * Game.SNAKE_SIZE + (Game.SNAKE_SIZE / 2);
+			y = random.nextInt(bounds.height / Game.SNAKE_SIZE) * Game.SNAKE_SIZE + (Game.SNAKE_SIZE / 2);
 			
-			xOffset = newX - x;
-			yOffset = newY - y;
+			xOffset = x - oldX;
+			yOffset = y - oldY;
 			
-			playerNew.x = newX;
-			playerNew.y = newY;
-			playerNew.tail = (ArrayList<Point>) tail.clone();
-			for (int i = 0; i < playerNew.tail.size(); i++) {
-				Point point = playerNew.tail.get(i);
+			for (int i = 0; i < tail.size(); i++) {
+				Point point = tail.get(i);
 				
 				point.x += xOffset;
 				point.y += yOffset;
 				
-				if (point.x < 0 || point.x < 0 || point.x > bounds.width || point.y > bounds.height) {
+				if (point.x < 0 || point.x < 0 || point.x > bounds.width || point.y > bounds.height)
 					telePossible = false;
-					break;
-				}
 			}
 			for (int i = 0; i < game.getApples().size(); i++) {
 				Apple apple = game.getApples().get(i);
-				if (playerNew.contains(apple.x, apple.y)) telePossible = false;
+				if (contains(apple.x, apple.y)) telePossible = false;
+			}
+			if (!telePossible) {
+				for (int i = 0; i < tail.size(); i++) {
+					Point point = tail.get(i);
+					
+					point.x -= xOffset;
+					point.y -= yOffset;
+				}
+				x = oldX;
+				y = oldY;
 			}
 		}
-		
-		if (telePossible) {
-			x = newX;
-			y = newY;
-			for (int i = 0; i < tail.size(); i++) {
-				Point point = tail.get(i);
-				point.x += xOffset;
-				point.y += yOffset;
-			}
-		}
-		
-		return telePossible;
 	}
 }
