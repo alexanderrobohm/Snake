@@ -2,6 +2,11 @@
 	<target name="compile">
 		<mkdir dir="bin"/>
 		<javac srcdir="src" destdir="bin"/>
-		<jar destfile="snake.jar" includes="bin/snake"/>
+		<jar destfile="snake.jar" basedir="bin" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="snake.Snake"/>
+				<attribute name="Class-Path" value="."/>
+			</manifest>
+		</jar>
 	</target>
 </project>
