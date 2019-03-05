@@ -1,0 +1,7 @@
+<project default="compile">
+	<target name="compile">
+		<mkdir dir="bin"/>
+		<javac srcdir="src" destdir="bin"/>
+		<jar destfile="snake.jar" includes="bin/snake"/>
+	</target>
+</project>
