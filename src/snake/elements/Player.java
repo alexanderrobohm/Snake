@@ -24,14 +24,12 @@ public class Player extends Element {
 	
 	private ArrayList<Point> tail;
 	
-	public int score = 0;
-	
 	public Player(Game game, int x, int y, int size, Color color, Rectangle bounds) {
 		super(game, x, y, size, color, bounds);
 		
 		movingDirection = MOVE_NONE;
 		alive = true;
-		
+
 		apple = null;
 		
 		tail = new ArrayList<Point>();
@@ -145,12 +143,16 @@ public class Player extends Element {
 	public void eat(Apple apple) {
 		switch (apple.getType()) {
 		case Apple.APPLE_GOOD:
-			score++;
+			game.score++;
 			this.apple = apple;
 			break;
 		case Apple.APPLE_BAD:
-			if (score >= 5) score -= 5;
-			else die();
+			if (game.score >= 5) {
+				game.score -= 5;
+			} else {
+				game.score = 0;
+				die();
+			}
 			break;
 		case Apple.APPLE_TELE:
 			teleport();
@@ -164,7 +166,7 @@ public class Player extends Element {
 	public int getLength() {
 		return tail.size();
 	}
-	
+
 	public void teleport() {
 		int oldX = 0, oldY = 0;
 		int xOffset = 0, yOffset = 0;

@@ -45,6 +45,8 @@ public class Game extends JFrame implements KeyListener{
 	private static final int APPLE_COUNT_GOOD = 10;
 	private static final int APPLE_COUNT_BAD = 5;
 	private static final int APPLE_COUNT_TELE = 2;
+
+	private static final int START_LIVES = 3;
 	
 	private int mode;
 	private int menuId;
@@ -68,8 +70,15 @@ public class Game extends JFrame implements KeyListener{
 	
 	private Player player;
 	private ArrayList<Apple> apples;
+
+	private int lives;
+	public int score;
+
+	private boolean doResetScoreOnDeath = false;
 	
 	public Game() {
+		lives = START_LIVES;
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setUndecorated(true);
@@ -123,9 +132,10 @@ public class Game extends JFrame implements KeyListener{
 	}
 	
 	private void initGame() {
+		int oldScore = doResetScoreOnDeath ? 0 : score;
 		player = new Player(this, bounds.width / 2, bounds.height / 2, SNAKE_SIZE, colorLime, bounds);
 		
-		player.score = 0;
+		if (doResetScoreOnDeath) score = 0;
 		
 		apples.clear();
 		createApples(APPLE_COUNT_GOOD, Apple.APPLE_GOOD);
@@ -218,8 +228,16 @@ public class Game extends JFrame implements KeyListener{
 					
 				}
 				if (mode != MODE_GAME_PAUSE) {
-					makeScreenShot();				
-					mode = MODE_GAME_OVER;
+					if (lives <= 0) {
+						makeScreenShot();				
+						mode = MODE_GAME_OVER;
+						lives = START_LIVES;
+						doResetScoreOnDeath = true;
+					} else {
+						doResetScoreOnDeath = false;
+						lives--;
+						mode = MODE_GAME_START;
+					}
 				}
 			} else if (mode == MODE_GAME_OVER) {
 				gameWait = 1 - gameWait;		
@@ -282,7 +300,7 @@ public class Game extends JFrame implements KeyListener{
 			g2Image.setFont(new Font("system", Font.PLAIN, 36));
 			x = screenSize.width - g2Image.getFontMetrics().stringWidth(scoreStr) - 20;
 			
-			scoreStr = String.valueOf(player.score); // "13"
+			scoreStr = String.valueOf(score); // "13"
 			for (int index = 5 - scoreStr.length(); index > 0; index--) { // "00013"
 				scoreStr = "0" + scoreStr;
 			}
@@ -293,6 +311,18 @@ public class Game extends JFrame implements KeyListener{
 					(int)((PANEL_HEIGHT - g2Image.getFontMetrics().getStringBounds(scoreStr, g2Image).getHeight()) / 2
 					+ g2Image.getFontMetrics().getAscent()));
 			
+			String livesStr = "LIVES: 3"; 
+			
+			g2Image.setFont(new Font("system", Font.PLAIN, 36));
+			x = 20;
+			
+			livesStr = String.valueOf(lives); // "3"
+			livesStr = "LIVES: " + livesStr; // "LIVES: 3"
+			
+			g2Image.setColor(Color.black);
+			g2Image.drawString(livesStr, x, 
+					(int)((PANEL_HEIGHT - g2Image.getFontMetrics().getStringBounds(scoreStr, g2Image).getHeight()) / 2
+					+ g2Image.getFontMetrics().getAscent()));
 		} else if (mode == MODE_GAME_OVER) {
 			String strGameOver = "GAME OVER";
 			
