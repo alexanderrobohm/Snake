@@ -132,7 +132,6 @@ public class Game extends JFrame implements KeyListener{
 	}
 	
 	private void initGame() {
-		int oldScore = doResetScoreOnDeath ? 0 : score;
 		player = new Player(this, bounds.width / 2, bounds.height / 2, SNAKE_SIZE, colorLime, bounds);
 		
 		if (doResetScoreOnDeath) score = 0;
