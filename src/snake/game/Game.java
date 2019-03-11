@@ -25,23 +25,23 @@ public class Game extends JFrame implements KeyListener{
 			Toolkit.getDefaultToolkit().getImage(""),
 			new Point(0,0),
 			"invisible");
-	
+
 	public static final int SNAKE_SIZE = 10;
 	private static final int PANEL_HEIGHT = 100;
-	
+
 	private static final int MODE_MAIN_MENU = 0;
 	private static final int MODE_GAME_START = 1;
 	private static final int MODE_GAME_PLAY = 2;
 	private static final int MODE_GAME_OVER = 3;
 	private static final int MODE_GAME_PAUSE = 4;
-	
+
 	private static final int MENU_START = 0;
 	private static final int MENU_EXIT = 1;
-	
+
 	private static final int MENU_PAUSE_CONTINUE= 0;
 	private static final int MENU_PAUSE_RESTART = 1;
 	private static final int MENU_PAUSE_EXIT = 2;
-	
+
 	private static final int APPLE_START_COUNT_GOOD = 10;
 	private static final int APPLE_START_COUNT_BAD = 5;
 
@@ -51,27 +51,27 @@ public class Game extends JFrame implements KeyListener{
 	private static final int APPLE_COUNT_TELE = 2;
 
 	private static final int START_LIVES = 3;
-	
+
 	private int mode;
 	private int menuId;
 	private int pauseId;
-	
+
 	private BufferedImage backgroundImage;
 	private int gameWait = 0;
-	
+
 	private Dimension screenSize;
-	
+
 	private int fps;
 	private long targetTime;
 
 	private boolean running;
-	
+
 	private BufferedImage image;
 	private Graphics2D g2Image;
 
 	private Rectangle bounds;
 	private Color colorLime;
-	
+
 	private Player player;
 	private ArrayList<Apple> apples;
 
@@ -81,67 +81,67 @@ public class Game extends JFrame implements KeyListener{
 	public int score;
 
 	private boolean doResetScoreOnDeath = false;
-	
+
 	public Game() {
 		lives = START_LIVES;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		setUndecorated(true);
 		setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		setResizable(true);
 		setIgnoreRepaint(true);
-		
+
 		addKeyListener(this);
-		
+
 		setCursor(INVISIBLE_CURSOR);
-		
+
 		setVisible(true);
 	}
-	
+
 	public void init() {
 		fps = 50;
 		targetTime = 1000 / fps;
-		
+
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		image = new BufferedImage(screenSize.width, screenSize.height,
 				BufferedImage.TYPE_INT_ARGB);
 		g2Image = image.createGraphics();
-		
+
 		int gridX = screenSize.width / SNAKE_SIZE - 1;
 		int gridY = (screenSize.height - PANEL_HEIGHT) / SNAKE_SIZE - 1;
-		
+
 		bounds = new Rectangle();
 		bounds.width = gridX * SNAKE_SIZE;
 		bounds.height = gridY * SNAKE_SIZE;
-		
+
 		if ((bounds.width / 2) % SNAKE_SIZE != SNAKE_SIZE / 2) bounds.width -= SNAKE_SIZE;
 		if ((bounds.height / 2) % SNAKE_SIZE != SNAKE_SIZE / 2) bounds.height -= SNAKE_SIZE;
-		
+
 		bounds.x = (screenSize.width - bounds.width) / 2;
 		bounds.y = (screenSize.height - PANEL_HEIGHT - bounds.height) / 2 + PANEL_HEIGHT;
-		
+
 		colorLime = new Color(192, 255, 0, 255);
-		
+
 		apples = new ArrayList<Apple>();
-		
+
 		mode = MODE_MAIN_MENU;
 		menuId = 0;
 		running = true;
 	}
-	
+
 	private void makeScreenShot() {
 		backgroundImage = new BufferedImage(screenSize.width, screenSize.height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2 = backgroundImage.createGraphics();
 		g2.drawImage(image, 0, 0, screenSize.width, screenSize.height, null);
 		g2.dispose();
 	}
-	
+
 	private void initGame() {
 		player = new Player(this, bounds.width / 2, bounds.height / 2, SNAKE_SIZE, colorLime, bounds);
-		
+
 		if (doResetScoreOnDeath) score = 0;
-		
+
 		appleCount[Apple.APPLE_GOOD] = 0;
 		appleCount[Apple.APPLE_BAD] = 0;
 		appleCount[Apple.APPLE_TELE] = 0;
@@ -153,7 +153,7 @@ public class Game extends JFrame implements KeyListener{
 
 		mode = MODE_GAME_PLAY;
 	}
-	
+
 	private void balanceApples(int typeEaten) {
 		if (typeEaten != Apple.APPLE_GOOD
 		||  appleCount[Apple.APPLE_GOOD] < APPLE_TARGET_COUNT_GOOD) {
@@ -177,12 +177,12 @@ public class Game extends JFrame implements KeyListener{
 		int loop = 0;
 		int index;
 		boolean error;
-		
+
 		while (loop < count) {
-			do {				
+			do {
 				x = new Random().nextInt(bounds.width / SNAKE_SIZE) * SNAKE_SIZE + SNAKE_SIZE / 2;
 				y = new Random().nextInt(bounds.height / SNAKE_SIZE) * SNAKE_SIZE + SNAKE_SIZE / 2;
-				
+
 				error = player.contains(x, y);
 				index = 0;
 				while (!error && index < apples.size()) {
@@ -197,55 +197,55 @@ public class Game extends JFrame implements KeyListener{
 		}
 		appleCount[appleType] += count;
 	}
-	
+
 	public void run() {
 		long startTime;
 		long elapsedTime;
 		long waitTime;
-		
+
 		int index;
 		Apple apple;
 		boolean found;
-		
+
 		while (running) {
 			if (mode == MODE_MAIN_MENU) {
 				draw();
 				drawToScreen();
 			} else if (mode == MODE_GAME_START || mode == MODE_GAME_PLAY) {
 				if (mode == MODE_GAME_START) initGame();
-				
+
 				while(mode != MODE_GAME_PAUSE && player.isAlive()) {
 					startTime = System.currentTimeMillis();
-					
+
 					player.update();
-					
+
 					index = 0;
 					found = false;
 					apple = null;
 					while (!found && index < apples.size()) {
 						apple = apples.get(index);
 						if (apple.contains(player.getX(), player.getY())) {
-							found = true; 
+							found = true;
 						} else {
 							index++;
 						}
 					}
-					
+
 					if (found) {
 						player.eat(apple);
 						apples.remove(index);
 						appleCount[apple.getType()]--;
 						balanceApples(apple.getType());
 					}
-					
+
 					if (!player.collision()) {
 						draw();
 						drawToScreen();
 					}
-					
+
 					elapsedTime = System.currentTimeMillis() - startTime;
 					waitTime = targetTime - elapsedTime;
-					
+
 					if (waitTime > 0) {
 						try {
 							Thread.sleep(waitTime);
@@ -253,11 +253,11 @@ public class Game extends JFrame implements KeyListener{
 							e.printStackTrace();
 						}
 					}
-					
+
 				}
 				if (mode != MODE_GAME_PAUSE) {
 					if (lives <= 0) {
-						makeScreenShot();				
+						makeScreenShot();
 						mode = MODE_GAME_OVER;
 						lives = START_LIVES;
 						doResetScoreOnDeath = true;
@@ -268,11 +268,11 @@ public class Game extends JFrame implements KeyListener{
 					}
 				}
 			} else if (mode == MODE_GAME_OVER) {
-				gameWait = 1 - gameWait;		
+				gameWait = 1 - gameWait;
 
 				draw();
 				drawToScreen();
-				
+
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e) {
@@ -283,120 +283,120 @@ public class Game extends JFrame implements KeyListener{
 				drawToScreen();
 			}
 		}
-		
+
 		dispose();
 	}
-	
+
 	private void draw() {
 		if (mode == MODE_MAIN_MENU) {
 			String strTitle = "SNAKE";
 			String strItems[] = {"Start", "Exit"};
-			
+
 			g2Image.setColor(Color.black);
 			g2Image.fillRect(0, 0, screenSize.width, screenSize.height);
-			
+
 			g2Image.setFont(new Font("System", Font.PLAIN, 72));
 			g2Image.setColor(colorLime);
-			
+
 			g2Image.drawString(strTitle, (screenSize.width - g2Image.getFontMetrics().stringWidth(strTitle)) / 2, 200);
-			
+
 			g2Image.setFont(new Font("System", Font.PLAIN, 36));
-			
+
 			for (int i = 0; i < strItems.length; i++) {
 				if (menuId == i) {
 					g2Image.setColor(colorLime);
 				} else {
 					g2Image.setColor(Color.lightGray);
 				}
-				
+
 				g2Image.drawString(strItems[i], (screenSize.width - g2Image.getFontMetrics().stringWidth(strItems[i])) / 2, 340 + i*60);
 			}
 		} else if (mode == MODE_GAME_PLAY) {
 			g2Image.setColor(colorLime);
 			g2Image.fillRect(0, 0, getWidth(), getHeight());
-			
+
 			g2Image.setColor(Color.black);
 			g2Image.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-			
+
 			player.draw(g2Image);
-			
+
 			for (int index = 0; index < apples.size(); index++) apples.get(index).draw(g2Image);
-			
-			String scoreStr = "SCORE: 00000"; 
+
+			String scoreStr = "SCORE: 00000";
 			int x;
-			
+
 			g2Image.setFont(new Font("system", Font.PLAIN, 36));
 			x = screenSize.width - g2Image.getFontMetrics().stringWidth(scoreStr) - 20;
-			
+
 			scoreStr = String.valueOf(score); // "13"
 			for (int index = 5 - scoreStr.length(); index > 0; index--) { // "00013"
 				scoreStr = "0" + scoreStr;
 			}
 			scoreStr = "SCORE: " + scoreStr; // "SCORE: 00013"
-			
+
 			g2Image.setColor(Color.black);
-			g2Image.drawString(scoreStr, x, 
+			g2Image.drawString(scoreStr, x,
 					(int)((PANEL_HEIGHT - g2Image.getFontMetrics().getStringBounds(scoreStr, g2Image).getHeight()) / 2
 					+ g2Image.getFontMetrics().getAscent()));
-			
-			String livesStr = "LIVES: 3"; 
-			
+
+			String livesStr = "LIVES: 3";
+
 			g2Image.setFont(new Font("system", Font.PLAIN, 36));
 			x = 20;
-			
+
 			livesStr = String.valueOf(lives); // "3"
 			livesStr = "LIVES: " + livesStr; // "LIVES: 3"
-			
+
 			g2Image.setColor(Color.black);
-			g2Image.drawString(livesStr, x, 
+			g2Image.drawString(livesStr, x,
 					(int)((PANEL_HEIGHT - g2Image.getFontMetrics().getStringBounds(scoreStr, g2Image).getHeight()) / 2
 					+ g2Image.getFontMetrics().getAscent()));
 		} else if (mode == MODE_GAME_OVER) {
 			String strGameOver = "GAME OVER";
-			
+
 			g2Image.drawImage(backgroundImage, 0, 0, screenSize.width, screenSize.height, null);
-			
+
 			g2Image.setFont(new Font("System", Font.PLAIN, 72));
 			if (gameWait == 0) {
 				g2Image.setColor(Color.red);
 			} else {
 				g2Image.setColor(Color.lightGray);
 			}
-			
+
 			g2Image.drawString(strGameOver,
 					(screenSize.width - g2Image.getFontMetrics().stringWidth(strGameOver)) / 2,
 					(int) ((screenSize.height - g2Image.getFontMetrics().getStringBounds(strGameOver, g2Image).getHeight()) / 2
 					+ g2Image.getFontMetrics().getAscent()));
-			
+
 			g2Image.setFont(new Font("System", Font.PLAIN, 36));
 		} else if (mode == MODE_GAME_PAUSE) {
 			String strTitle = "PAUSE";
 			String strItems[] = {"Continue", "Restart", "Exit"};
-			
+
 			g2Image.setColor(Color.black);
 			g2Image.fillRect(0, 0, screenSize.width, screenSize.height);
-			
+
 			g2Image.drawImage(backgroundImage, 0, 0, screenSize.width, screenSize.height, null);
-			
+
 			g2Image.setFont(new Font("System", Font.PLAIN, 72));
 			g2Image.setColor(colorLime);
-			
+
 			g2Image.drawString(strTitle, (screenSize.width - g2Image.getFontMetrics().stringWidth(strTitle)) / 2, 200);
-			
+
 			g2Image.setFont(new Font("System", Font.PLAIN, 36));
-			
+
 			for (int i = 0; i < strItems.length; i++) {
 				if (pauseId == i) {
 					g2Image.setColor(colorLime);
 				} else {
 					g2Image.setColor(Color.lightGray);
 				}
-				
+
 				g2Image.drawString(strItems[i], (screenSize.width - g2Image.getFontMetrics().stringWidth(strItems[i])) / 2, 340 + i*60);
 			}
 		}
 	}
-	
+
 	private void drawToScreen() {
 		Graphics2D g2 = (Graphics2D) getGraphics();
 		g2.drawImage(image, 0, 0, screenSize.width, screenSize.height, null);
@@ -454,7 +454,7 @@ public class Game extends JFrame implements KeyListener{
 					break;
 				}
 			}
-		}	
+		}
 	}
 
 	@Override
@@ -462,9 +462,9 @@ public class Game extends JFrame implements KeyListener{
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {}
-	
+
 	public ArrayList<Apple> getApples() {
 		return apples;
 	}
-	
+
 }
