@@ -42,8 +42,12 @@ public class Game extends JFrame implements KeyListener{
 	private static final int MENU_PAUSE_RESTART = 1;
 	private static final int MENU_PAUSE_EXIT = 2;
 	
-	private static final int APPLE_COUNT_GOOD = 10;
-	private static final int APPLE_COUNT_BAD = 5;
+	private static final int APPLE_START_COUNT_GOOD = 10;
+	private static final int APPLE_START_COUNT_BAD = 5;
+
+	private static final int APPLE_TARGET_COUNT_GOOD = 3;
+	private static final int APPLE_TARGET_COUNT_BAD = 25;
+
 	private static final int APPLE_COUNT_TELE = 2;
 
 	private static final int START_LIVES = 3;
@@ -70,6 +74,8 @@ public class Game extends JFrame implements KeyListener{
 	
 	private Player player;
 	private ArrayList<Apple> apples;
+
+	private int[] appleCount = new int[3];
 
 	private int lives;
 	public int score;
@@ -136,14 +142,35 @@ public class Game extends JFrame implements KeyListener{
 		
 		if (doResetScoreOnDeath) score = 0;
 		
+		appleCount[Apple.APPLE_GOOD] = 0;
+		appleCount[Apple.APPLE_BAD] = 0;
+		appleCount[Apple.APPLE_TELE] = 0;
+
 		apples.clear();
-		createApples(APPLE_COUNT_GOOD, Apple.APPLE_GOOD);
-		createApples(APPLE_COUNT_BAD, Apple.APPLE_BAD);
+		createApples(APPLE_START_COUNT_GOOD, Apple.APPLE_GOOD);
+		createApples(APPLE_START_COUNT_BAD, Apple.APPLE_BAD);
 		createApples(APPLE_COUNT_TELE, Apple.APPLE_TELE);
-		
+
 		mode = MODE_GAME_PLAY;
 	}
 	
+	private void balanceApples(int typeEaten) {
+		if (typeEaten != Apple.APPLE_GOOD
+		||  appleCount[Apple.APPLE_GOOD] < APPLE_TARGET_COUNT_GOOD) {
+			createApples(1, typeEaten);
+		} else {
+			int goodAppleDelta = APPLE_START_COUNT_GOOD - APPLE_TARGET_COUNT_GOOD;
+			int  badAppleDelta = APPLE_TARGET_COUNT_BAD - APPLE_START_COUNT_BAD;
+
+			int applesToCreate = (int)Math.ceil((float)badAppleDelta / (float)goodAppleDelta);
+
+			if (appleCount[Apple.APPLE_BAD] + applesToCreate > APPLE_TARGET_COUNT_BAD)
+			        applesToCreate = APPLE_TARGET_COUNT_BAD - appleCount[Apple.APPLE_BAD];
+
+			createApples(applesToCreate, Apple.APPLE_BAD);
+		}
+	}
+
 	private void createApples(int count, int appleType) {
 		Apple apple;
 		int x, y;
@@ -168,6 +195,7 @@ public class Game extends JFrame implements KeyListener{
 			apples.add(apple);
 			loop++;
 		}
+		appleCount[appleType] += count;
 	}
 	
 	public void run() {
@@ -206,7 +234,8 @@ public class Game extends JFrame implements KeyListener{
 					if (found) {
 						player.eat(apple);
 						apples.remove(index);
-						createApples(1, apple.getType());
+						appleCount[apple.getType()]--;
+						balanceApples(apple.getType());
 					}
 					
 					if (!player.collision()) {
