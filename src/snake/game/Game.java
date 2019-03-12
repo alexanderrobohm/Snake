@@ -80,7 +80,7 @@ public class Game extends JFrame implements KeyListener{
 	private int lives;
 	public int score;
 
-	private boolean doResetScoreOnDeath = false;
+	private boolean doResetGame = false;
 
 	public Game() {
 		lives = START_LIVES;
@@ -140,7 +140,10 @@ public class Game extends JFrame implements KeyListener{
 	private void initGame() {
 		player = new Player(this, bounds.width / 2, bounds.height / 2, SNAKE_SIZE, colorLime, bounds);
 
-		if (doResetScoreOnDeath) score = 0;
+		if (doResetGame) {
+			score = 0;
+			lives = START_LIVES;
+		}
 
 		appleCount[Apple.APPLE_GOOD] = 0;
 		appleCount[Apple.APPLE_BAD] = 0;
@@ -259,10 +262,9 @@ public class Game extends JFrame implements KeyListener{
 					if (lives <= 0) {
 						makeScreenShot();
 						mode = MODE_GAME_OVER;
-						lives = START_LIVES;
-						doResetScoreOnDeath = true;
+						doResetGame = true;
 					} else {
-						doResetScoreOnDeath = false;
+						doResetGame = false;
 						lives--;
 						mode = MODE_GAME_START;
 					}
@@ -447,6 +449,7 @@ public class Game extends JFrame implements KeyListener{
 					mode = MODE_GAME_PLAY;
 					break;
 				case MENU_PAUSE_RESTART:
+					doResetGame = true;
 					mode = MODE_GAME_START;
 					break;
 				case MENU_PAUSE_EXIT:
