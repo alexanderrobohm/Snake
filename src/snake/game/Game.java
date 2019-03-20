@@ -81,6 +81,7 @@ public class Game extends JFrame implements KeyListener{
 	public int score;
 
 	private boolean doResetGame = false;
+	private boolean pausePressed = false;
 
 	public Game() {
 		lives = START_LIVES;
@@ -256,7 +257,12 @@ public class Game extends JFrame implements KeyListener{
 							e.printStackTrace();
 						}
 					}
-
+					if (pausePressed) {
+						pauseId = 0;
+						pausePressed = false;
+						mode = MODE_GAME_PAUSE;
+						makeScreenShot();
+					}
 				}
 				if (mode != MODE_GAME_PAUSE) {
 					if (lives <= 0) {
@@ -431,7 +437,7 @@ public class Game extends JFrame implements KeyListener{
 			if (event.getKeyCode() == KeyEvent.VK_DOWN) player.down();
 			if (event.getKeyCode() == KeyEvent.VK_LEFT) player.left();
 			if (event.getKeyCode() == KeyEvent.VK_RIGHT) player.right();
-			if (event.getKeyCode() == KeyEvent.VK_P) {	pauseId = 0; mode = MODE_GAME_PAUSE; makeScreenShot(); }
+			if (event.getKeyCode() == KeyEvent.VK_P) pausePressed = true;
 		} else if (mode == MODE_GAME_OVER) {
 			if (event.getKeyCode() == KeyEvent.VK_ENTER) mode = MODE_MAIN_MENU;
 		} else if (mode == MODE_GAME_PAUSE) {
