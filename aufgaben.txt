@@ -1,0 +1,62 @@
+Snake - Spielerweiterungen
+==========================
+
+[X] Man kann nicht nach links drücken, wenn man sich nach rechts bewegt, und
+    umgekehrt.
+    (5 Punkte, ca. 2h)
+[X] Es gibt neben den guten Äpfeln auch schlechte, die 5 Punkte abziehen oder
+    zu einem Tod führen, wenn man <= 5 Punkte hat.
+    (5 Punkte, ca. 2h)
+[X] Teleport-Äpfel teleportieren den Spieler beim Fressen.
+    (5 Punkte, ca. 2h)
+[X] Das Äpfel-Verhältnis verändert sich von 10 guten und 5 schlechten zu 3
+    guten und 25 schlechten.
+    (5 Punkte, ca. 2h)
+[X] Der Spieler hat drei Leben, die erst aufgebraucht werden müssen, damit man
+    ein Game Over bekommt.
+    (10 Punkte, ca. 4h)
+[ ] Nach einer bestimmten Anzahl an Punkten steigt man in ein höheres Level auf.
+    Hier gibt es z.B. eine höhere Geschwindigkeit, Hindernisse oder weniger
+    Äpfel.
+    (10 Punkte, ca. 4h)
+[ ] Es werden zufällig Powerups oder Hindernisse verteilt. Es muss mind. 3
+    verschiedene Arten von Powerups geben.
+    (10 Punkte, ca. 4h)
+[X] In Abhängigkeit der Länge der Schlange steigert sich die
+    Spielgeschwindigkeit.
+    (15 Punkte, ca. 6h)
+[ ] Nach einer zufälligen Zeit verschwinden Äpfel; dafür werden neue
+    Äpfel erzeugt.
+    Schließt sich aus mit der nächsten Aufgabe, in dem Fall(?) nur 5 Punkte.
+    (15 Punkte, ca. 6h / 2h)
+[ ] Gute Äpfel verwandeln sich mit der Zeit in schlechte Äpfel.
+    Schließt sich aus mit der vorherigen Aufgabe, in dem Fall(?) nur 5 Punkte.
+    (15 Punkte, ca. 6h / 2h)
+[ ] Custom Game: Spieler kann beim Start z.B. Geschwindigkeit oder Äpfel-
+    Verhältnis angeben.
+    (20 Punkte, ca. 8 Stunden)
+[ ] Der Spieler hat eine Hungerleiste, die sich mit der Zeit entleert und die
+    man durch Fressen von Äpfeln füllen kann. Erreicht sie 0, stirbt der
+    Spieler.
+    (20 Punkte, ca. 8h)
+[ ] Der Spieler kann bei der Auswahl des Spielmodus die Karte auswählen; diese
+    wird bei der Auswahl in Miniaturansicht angezeigt. Es müssen mindestens 3
+    Karten zur Verfügung stehen.
+    (40 Punkte, ca. 16h)
+[ ] Der Spieler kann während des Spiels in einem Ingame-Shop Punkte gegen
+    Powerups eintauschen. Die Powerups werden auf dem Bildschirm angezeigt und
+    können mit den Tasten 0-9 eingesetzt werden.
+    (50 Punkte, ca. 20h)
+[ ] Der Highscore wird tempotär im RAM gespeichert und kann über das Menu in
+    einer sortierten Liste angezeigt werden.
+    (10 Punkte, ca. 4h)
+[ ] Der Highscore wird zusätzlich in einer XML-Datei gespeichert und beim
+    Programmstart eingelesen.
+    (15 Punkte, ca. 6h)
+[ ] Das Hauptmenü und das Spielfeld haben ein Hintergrundbild.
+    (5 Punkte, ca. 2h)
+[ ] Die Farbgebung des Spiels und seiner Elemente kann über das Menü
+    angepasst werden.
+    (15 Punkte, ca. 6h)
+
+Gesamt: 045 / 265 Punkten (16,98 %)
