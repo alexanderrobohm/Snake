@@ -50,6 +50,10 @@ public class Game extends JFrame implements KeyListener{
 
 	private static final int APPLE_COUNT_TELE = 2;
 
+	private static final int START_FPS = 20;
+	private static final int MAX_FPS = 60;
+	private static final int LENGTH_FOR_MAX_FPS = 15;
+
 	private static final int START_LIVES = 3;
 
 	private int mode;
@@ -101,9 +105,6 @@ public class Game extends JFrame implements KeyListener{
 	}
 
 	public void init() {
-		fps = 50;
-		targetTime = 1000 / fps;
-
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		image = new BufferedImage(screenSize.width, screenSize.height,
 				BufferedImage.TYPE_INT_ARGB);
@@ -219,6 +220,9 @@ public class Game extends JFrame implements KeyListener{
 				if (mode == MODE_GAME_START) initGame();
 
 				while(mode != MODE_GAME_PAUSE && player.isAlive()) {
+					fps = START_FPS + (int)(((float)MAX_FPS - (float)START_FPS) * ((float)player.getLength() / (float)LENGTH_FOR_MAX_FPS));
+					targetTime = 1000 / fps;
+
 					startTime = System.currentTimeMillis();
 
 					player.update();
