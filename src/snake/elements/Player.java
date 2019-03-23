@@ -18,6 +18,11 @@ public class Player extends Element {
 	private static final int MOVE_RIGHT = 3;
 
 	private int movingDirection;
+	private int nextMovingDirection;
+
+	private boolean firstInputOfFrame;
+	private boolean inputBuffered = false;
+
 	private boolean alive;
 
 	private Apple apple;
@@ -28,6 +33,9 @@ public class Player extends Element {
 		super(game, x, y, size, color, bounds);
 
 		movingDirection = MOVE_NONE;
+		nextMovingDirection = MOVE_NONE;
+		firstInputOfFrame = true;
+
 		alive = true;
 
 		apple = null;
@@ -40,7 +48,16 @@ public class Player extends Element {
 		int oldY = this.y;
 		int tempX, tempY;
 
-		switch (movingDirection) {
+	if (nextMovingDirection != MOVE_NONE) {
+		if (inputBuffered) {
+			inputBuffered = false;
+		} else {
+			movingDirection = nextMovingDirection;
+			nextMovingDirection = MOVE_NONE;
+		}
+	}
+	
+	switch (movingDirection) {
 		case MOVE_UP:
 			y -= size;
 			break;
@@ -73,6 +90,8 @@ public class Player extends Element {
 			}
 			apple = null;
 		}
+
+		firstInputOfFrame = true;
 	}
 
 	public void draw(Graphics2D g2) {
@@ -91,26 +110,42 @@ public class Player extends Element {
 	}
 
 	public void up() {
-		if (movingDirection != MOVE_DOWN) {
+		if (!firstInputOfFrame) {
+			nextMovingDirection = MOVE_UP;
+			inputBuffered = true;
+		} else if (movingDirection != MOVE_DOWN) {
 			movingDirection = MOVE_UP;
+			firstInputOfFrame = false;
 		}
 	}
 
 	public void down() {
-		if (movingDirection != MOVE_UP) {
+		if (!firstInputOfFrame) {
+			nextMovingDirection = MOVE_DOWN;
+			inputBuffered = true;
+		} else if (movingDirection != MOVE_UP) {
 			movingDirection = MOVE_DOWN;
+			firstInputOfFrame = false;
 		}
 	}
 
 	public void left() {
-		if (movingDirection != MOVE_RIGHT) {
+		if (!firstInputOfFrame) {
+			nextMovingDirection = MOVE_LEFT;
+			inputBuffered = true;
+		} else if (movingDirection != MOVE_RIGHT) {
 			movingDirection = MOVE_LEFT;
+			firstInputOfFrame = false;
 		}
 	}
 
 	public void right() {
-		if (movingDirection != MOVE_LEFT) {
+		if (!firstInputOfFrame) {
+			nextMovingDirection = MOVE_RIGHT;
+			inputBuffered = true;
+		} else if (movingDirection != MOVE_LEFT) {
 			movingDirection = MOVE_RIGHT;
+			firstInputOfFrame = false;
 		}
 	}
 
