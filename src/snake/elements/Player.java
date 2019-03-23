@@ -48,16 +48,16 @@ public class Player extends Element {
 		int oldY = this.y;
 		int tempX, tempY;
 
-	if (nextMovingDirection != MOVE_NONE) {
-		if (inputBuffered) {
-			inputBuffered = false;
-		} else {
-			movingDirection = nextMovingDirection;
-			nextMovingDirection = MOVE_NONE;
+		if (nextMovingDirection != MOVE_NONE) {
+			if (inputBuffered) {
+				inputBuffered = false;
+			} else {
+				movingDirection = nextMovingDirection;
+				nextMovingDirection = MOVE_NONE;
+			}
 		}
-	}
-	
-	switch (movingDirection) {
+
+		switch (movingDirection) {
 		case MOVE_UP:
 			y -= size;
 			break;
