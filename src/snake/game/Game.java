@@ -56,6 +56,8 @@ public class Game extends JFrame implements KeyListener{
 
 	private static final int START_LIVES = 3;
 
+	private static int FRAMES_PER_FOOD_TICK = 5;
+
 	private int mode;
 	private int menuId;
 	private int pauseId;
@@ -83,6 +85,9 @@ public class Game extends JFrame implements KeyListener{
 
 	private int lives;
 	public int score;
+
+	public int food;
+	private int framesUntilFoodTick;
 
 	private boolean doResetGame = false;
 	private boolean pausePressed = false;
@@ -146,6 +151,9 @@ public class Game extends JFrame implements KeyListener{
 			score = 0;
 			lives = START_LIVES;
 		}
+
+		food = 100;
+		framesUntilFoodTick = FRAMES_PER_FOOD_TICK;
 
 		appleCount[Apple.APPLE_GOOD] = 0;
 		appleCount[Apple.APPLE_BAD] = 0;
@@ -249,6 +257,17 @@ public class Game extends JFrame implements KeyListener{
 					if (!player.collision()) {
 						draw();
 						drawToScreen();
+					}
+
+					framesUntilFoodTick--;
+					if (framesUntilFoodTick <= 0) {
+						framesUntilFoodTick = FRAMES_PER_FOOD_TICK;
+						if (player.movingDirection != Player.MOVE_NONE) food--;
+					}
+					if (food <= 0) {
+						food = 0;
+						mode = MODE_GAME_OVER;
+						player.die();
 					}
 
 					elapsedTime = System.currentTimeMillis() - startTime;
@@ -363,6 +382,10 @@ public class Game extends JFrame implements KeyListener{
 			g2Image.drawString(livesStr, x,
 					(int)((PANEL_HEIGHT - g2Image.getFontMetrics().getStringBounds(scoreStr, g2Image).getHeight()) / 2
 					+ g2Image.getFontMetrics().getAscent()));
+
+			g2Image.setColor(Color.black);
+			g2Image.drawRect(screenSize.width / 3, PANEL_HEIGHT / 3, screenSize.width / 3, PANEL_HEIGHT / 3);
+			g2Image.fillRect(screenSize.width / 3, PANEL_HEIGHT / 3, (int)((screenSize.width / 3.0) * (food / 100.0)), PANEL_HEIGHT / 3);
 		} else if (mode == MODE_GAME_OVER) {
 			String strGameOver = "GAME OVER";
 

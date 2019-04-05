@@ -11,13 +11,13 @@ import snake.game.Game;
 
 public class Player extends Element {
 
-	private static final int MOVE_NONE = -1;
-	private static final int MOVE_UP = 0;
-	private static final int MOVE_DOWN = 1;
-	private static final int MOVE_LEFT = 2;
-	private static final int MOVE_RIGHT = 3;
+	public static final int MOVE_NONE = -1;
+	public static final int MOVE_UP = 0;
+	public static final int MOVE_DOWN = 1;
+	public static final int MOVE_LEFT = 2;
+	public static final int MOVE_RIGHT = 3;
 
-	private int movingDirection;
+	public int movingDirection;
 	private int nextMovingDirection;
 
 	private boolean firstInputOfFrame;
@@ -179,6 +179,7 @@ public class Player extends Element {
 		switch (apple.getType()) {
 		case Apple.APPLE_GOOD:
 			game.score++;
+			game.food = 100;
 			this.apple = apple;
 			break;
 		case Apple.APPLE_BAD:

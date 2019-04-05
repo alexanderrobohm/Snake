@@ -35,7 +35,7 @@ Snake - Spielerweiterungen
 [ ] Custom Game: Spieler kann beim Start z.B. Geschwindigkeit oder Äpfel-
     Verhältnis angeben.
     (20 Punkte, ca. 8 Stunden)
-[ ] Der Spieler hat eine Hungerleiste, die sich mit der Zeit entleert und die
+[X] Der Spieler hat eine Hungerleiste, die sich mit der Zeit entleert und die
     man durch Fressen von Äpfeln füllen kann. Erreicht sie 0, stirbt der
     Spieler.
     (20 Punkte, ca. 8h)
