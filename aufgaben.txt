@@ -59,4 +59,4 @@ Snake - Spielerweiterungen
     angepasst werden.
     (15 Punkte, ca. 6h)
 
-Gesamt: 045 / 265 Punkten (16,98 %)
+Gesamt: 065 / 265 Punkten (24,53 %)
